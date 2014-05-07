@@ -26,24 +26,22 @@
 
 	machine plexer;
 	
-	keyword = 
-	number = ('+'|'-')?[0-9]+('.'[0-9])*;
-	identifier = [a-zA-Z]+[a-zA-Z_]*;
+	identifier = alpha+(alnum|'_')*;
+	number = ('+'|'-')?digit+('.'digit)*;
 	label = identifier':';
 	
 	main := |*
 		number => {
-			emit(:number_literal, data, token_array, ts, te)
+			emit(:NUMBER, data, token_array, ts, te)
 		};
 		
 		identifier => { 
-			emit(:identifier_literal, data, token_array, ts, te)
+			emit(:IDENTIFIER, data, token_array, ts, te)
 		};
 
 		label => { 
-			emit(:identifier_label, data, token_array, ts, te)
+			emit(:LABEL, data, token_array, ts, te)
 		};
-		
 		
 		space;
 		
@@ -68,4 +66,4 @@ def run_lexer(data)
 	puts token_array.inspect
 end
 
-run_lexer("toto bibi: 100 101.1 -200 -200.1 a a_ a_b")	
+run_lexer("toto bibi: t1_a1a 100 101.1 -200 -200.1 a a_ a_b")	

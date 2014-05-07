@@ -1,12 +1,35 @@
 
 # line 1 "Lexer.rl"
 # Lexer.rl
+#
+# list of opcode
+# NOP : do nothing
+# PUSH : ?
+# POP : discard the top value on the stack
+# DUP : duplicate value on top of the stack
+# SWAP : swap the top 2 word on the stack
+# ADD : add 2 numbers
+# SUB : sub 2 numbers
+# MUL : mul 1 numbers
+# MOD : modulo of 2 numbers
+# DIV : div 2 numbers
+# ABS : absolute value of a number
+# NEG : negate a number
+# AND
+# OR
+# XOR
+# N2S : number to string
+# S2N : string to number
+# CMP : compare 2 numbers
+# 
 
-# line 28 "Lexer.rl"
+
+
+# line 50 "Lexer.rl"
 
 
 
-# line 10 "Lexer.rb"
+# line 33 "Lexer.rb"
 class << self
 	attr_accessor :_plexer_actions
 	private :_plexer_actions, :_plexer_actions=
@@ -32,8 +55,8 @@ end
 self._plexer_trans_keys = [
 	48, 57, 48, 57, 32, 43, 45, 9, 
 	13, 48, 57, 65, 90, 97, 122, 46, 
-	48, 57, 46, 58, 95, 65, 90, 97, 
-	122, 0
+	48, 57, 46, 58, 95, 48, 57, 65, 
+	90, 97, 122, 0
 ]
 
 class << self
@@ -49,7 +72,7 @@ class << self
 	private :_plexer_range_lengths, :_plexer_range_lengths=
 end
 self._plexer_range_lengths = [
-	0, 1, 1, 4, 1, 0, 2
+	0, 1, 1, 4, 1, 0, 3
 ]
 
 class << self
@@ -61,14 +84,22 @@ self._plexer_index_offsets = [
 ]
 
 class << self
+	attr_accessor :_plexer_indicies
+	private :_plexer_indicies, :_plexer_indicies=
+end
+self._plexer_indicies = [
+	0, 1, 3, 2, 4, 5, 5, 4, 
+	0, 6, 6, 1, 8, 0, 7, 8, 
+	7, 10, 6, 6, 6, 6, 9, 0
+]
+
+class << self
 	attr_accessor :_plexer_trans_targs
 	private :_plexer_trans_targs, :_plexer_trans_targs=
 end
 self._plexer_trans_targs = [
-	4, 0, 5, 3, 3, 1, 1, 3, 
-	4, 6, 6, 0, 2, 4, 3, 2, 
-	3, 3, 6, 6, 6, 3, 3, 3, 
-	3, 3, 0
+	4, 0, 3, 5, 3, 1, 6, 3, 
+	2, 3, 3
 ]
 
 class << self
@@ -76,10 +107,8 @@ class << self
 	private :_plexer_trans_actions, :_plexer_trans_actions=
 end
 self._plexer_trans_actions = [
-	5, 0, 5, 15, 9, 0, 0, 9, 
-	5, 0, 0, 0, 0, 5, 11, 0, 
-	11, 7, 0, 0, 0, 13, 15, 11, 
-	11, 13, 0
+	5, 0, 15, 5, 9, 0, 0, 11, 
+	0, 13, 7
 ]
 
 class << self
@@ -103,7 +132,7 @@ class << self
 	private :_plexer_eof_trans, :_plexer_eof_trans=
 end
 self._plexer_eof_trans = [
-	0, 0, 23, 0, 25, 25, 26
+	0, 0, 3, 0, 8, 8, 10
 ]
 
 class << self
@@ -125,7 +154,7 @@ end
 self.plexer_en_main = 3;
 
 
-# line 31 "Lexer.rl"
+# line 53 "Lexer.rl"
 
 def emit(token_name, data, target_array, ts, te)
 	target_array << {:name => token_name.to_sym, :value => data[ts..te].pack("c*") }
@@ -137,7 +166,7 @@ def run_lexer(data)
 	token_array = []
 	
 	
-# line 141 "Lexer.rb"
+# line 170 "Lexer.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -147,9 +176,9 @@ begin
 	act = 0
 end
 
-# line 42 "Lexer.rl"
+# line 64 "Lexer.rl"
 	
-# line 153 "Lexer.rb"
+# line 182 "Lexer.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -183,7 +212,7 @@ begin
 		begin
 ts = p
 		end
-# line 187 "Lexer.rb"
+# line 216 "Lexer.rb"
 		end # from state action switch
 	end
 	if _trigger_goto
@@ -238,6 +267,7 @@ ts = p
 	     _trans += _klen
 	  end
 	end while false
+	_trans = _plexer_indicies[_trans]
 	end
 	if _goto_level <= _eof_trans
 	cs = _plexer_trans_targs[_trans]
@@ -255,43 +285,43 @@ when 2 then
 te = p+1
 		end
 when 3 then
-# line 19 "Lexer.rl"
+# line 42 "Lexer.rl"
 		begin
 te = p+1
  begin  
-			emit(:identifier_label, data, token_array, ts, te)
+			emit(:LABEL, data, token_array, ts, te)
 		 end
 		end
 when 4 then
-# line 24 "Lexer.rl"
+# line 46 "Lexer.rl"
 		begin
 te = p+1
 		end
 when 5 then
-# line 11 "Lexer.rl"
+# line 34 "Lexer.rl"
 		begin
 te = p
 p = p - 1; begin 
-			emit(:number_literal, data, token_array, ts, te)
+			emit(:NUMBER, data, token_array, ts, te)
 		 end
 		end
 when 6 then
-# line 15 "Lexer.rl"
+# line 38 "Lexer.rl"
 		begin
 te = p
 p = p - 1; begin  
-			emit(:identifier_literal, data, token_array, ts, te)
+			emit(:IDENTIFIER, data, token_array, ts, te)
 		 end
 		end
 when 7 then
-# line 11 "Lexer.rl"
+# line 34 "Lexer.rl"
 		begin
  begin p = ((te))-1; end
  begin 
-			emit(:number_literal, data, token_array, ts, te)
+			emit(:NUMBER, data, token_array, ts, te)
 		 end
 		end
-# line 295 "Lexer.rb"
+# line 325 "Lexer.rb"
 			end # action switch
 		end
 	end
@@ -311,7 +341,7 @@ when 0 then
 # line 1 "NONE"
 		begin
 ts = nil;		end
-# line 315 "Lexer.rb"
+# line 345 "Lexer.rb"
 		end # to state action switch
 	end
 	if _trigger_goto
@@ -342,9 +372,9 @@ end
 	end
 	end
 
-# line 43 "Lexer.rl"
+# line 65 "Lexer.rl"
 	
 	puts token_array.inspect
 end
 
-run_lexer("toto bibi: 100 101.1 -200 -200.1 a a_ a_b")	
+run_lexer("toto bibi: t1_a1a 100 101.1 -200 -200.1 a a_ a_b")	
